@@ -1,0 +1,96 @@
+plugins {
+    id 'fabric-loom' version '1.7.4'
+    id 'maven-publish'
+}
+
+loom {
+    interfaceInjection {
+        enableDependencyInterfaceInjection = true
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+base {
+    archivesName = project.archives_base_name
+}
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "Fabric"
+        url = "https://maven.fabricmc.net/"
+    }
+    maven {
+        name = "JitPack"
+        url = "https://jitpack.io"
+    }
+}
+
+dependencies {
+    // Minecraft
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    
+    // Fabric
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}") {
+        exclude group: 'net.fabricmc.fabric-api', module: 'fabric-content-registries-v0'
+    }
+
+    // KaptainWutax libraries
+    modImplementation('com.github.KaptainWutax:MathUtils:b4d89b26f2') {
+        transitive = false
+        exclude group: 'net.fabricmc'
+        exclude group: 'net.minecraft'
+    }
+    include('com.github.KaptainWutax:MathUtils:b4d89b26f2') { 
+        transitive = false 
+    }
+    
+    modImplementation('com.github.KaptainWutax:BiomeUtils:1.0.0') {
+        transitive = false
+        exclude group: 'net.fabricmc'
+        exclude group: 'net.minecraft'
+    }
+    include('com.github.KaptainWutax:BiomeUtils:1.0.0') { 
+        transitive = false 
+    }
+    
+    modImplementation('com.github.KaptainWutax:SeedUtils:0de70bc772f') {
+        transitive = false
+        exclude group: 'net.fabricmc'
+        exclude group: 'net.minecraft'
+    }
+    include('com.github.KaptainWutax:SeedUtils:0de70bc772f') { 
+        transitive = false 
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.release = 21
+    options.compilerArgs.add("-Xlint:unchecked")
+}
+
+java {
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}

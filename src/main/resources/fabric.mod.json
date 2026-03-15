@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "diamondgen",
+  "version": "${version}",
+  "name": "diamondgen",
+  "description": "Find diamonds and ancient debris using seed",
+  "authors": ["19MisterX98"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/diamondgen/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+    ],
+    "main": [
+      "misterx.diamondgen.DiamondGen"
+    ]
+  },
+  "mixins": [
+    "diamondgen.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": ">=1.21",
+    "java": ">=21"
+  }
+}
