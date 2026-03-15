@@ -3,17 +3,9 @@
   "minVersion": "0.8",
   "package": "misterx.diamondgen.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
-  ],
+  "mixins": [],
   "client": [
-    "ClientPlayerEntityMixin",
-    "ClientPlayNetworkHandlerMixin",
-    "ClientWorldMixin",
-    "DimensionTypeMixin",
-    "DummyProfilerMixin",
     "GameRendererMixin"
-  ],
-  "server": [
   ],
   "injectors": {
     "defaultRequire": 1
