@@ -23,40 +23,34 @@ public class SimOreGen {
     public ClientWorld world = MinecraftClient.getInstance().world;
 
 
-    public void render() {
-        if(!DiamondGen.active){
-            return;
-        }
-        try {
-            if (isOverworld(DiamondGen.gen.world.getDimension())) {
-                this.renderers.forEach(renderer -> {
-                    if (Util.distanceToPlayer(renderer.getPos()) < DiamondGen.range) {
-                        if (DiamondGen.isOpaque()) {
-                            if (Util.isOpaque(renderer.getPos())) {
-                                renderer.render();
-                            }
-                        } else {
-                            renderer.render();
-                        }
+public void render(MatrixStack matrices) {
+    if (!DiamondGen.active) return;
+
+    ClientWorld world = MinecraftClient.getInstance().world;
+    if (world == null) return;
+
+    try {
+        if (isOverworld(world)) {
+            for (Renderer renderer : this.renderers) {
+                if (Util.distanceToPlayer(renderer.getPos()) < DiamondGen.range) {
+                    if (!DiamondGen.isOpaque() || Util.isOpaque(renderer.getPos())) {
+                        renderer.render(matrices);
                     }
-                });
-            }else if(isNether(DiamondGen.gen.world.getDimension())) {
-                DiamondGen.gen.simDebrisGen.renderers.forEach(renderer -> {
-                    if (Util.distanceToPlayer(renderer.getPos()) < DiamondGen.range) {
-                        if (DiamondGen.isOpaque()) {
-                            if (Util.isOpaque(renderer.getPos())) {
-                                renderer.render();
-                            }
-                        } else {
-                            renderer.render();
-                        }
-                    }
-                });
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else if (isNether(world)) {
+            for (Renderer renderer : DiamondGen.gen.simDebrisGen.renderers) {
+                if (Util.distanceToPlayer(renderer.getPos()) < DiamondGen.range) {
+                    if (!DiamondGen.isOpaque() || Util.isOpaque(renderer.getPos())) {
+                        renderer.render(matrices);
+                    }
+                }
+            }
         }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
 
     public boolean generate(Random random, BlockPos blockPos, ClientWorld world,int size) {
         float f = random.nextFloat() * 3.1415927F;
